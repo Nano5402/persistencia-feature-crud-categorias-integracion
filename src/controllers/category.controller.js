@@ -74,4 +74,23 @@ export const updateCategory = (req, res) => {
   });
 };
 
-// El método deleteCategory lo completaremos en la Fase 4
+export const deleteCategory = (req, res) => {
+  const { id } = req.params;
+  const isDeleted = CategoryModel.delete(Number(id));
+  
+  if (!isDeleted) {
+    return res.status(404).json({
+      success: false,
+      message: `Categoría con ID ${id} no encontrada`,
+      data: [],
+      errors: [],
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Categoría eliminada correctamente",
+    data: [],
+    errors: [],
+  });
+};
