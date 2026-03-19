@@ -29,5 +29,5 @@ export const CategoryModel = {
     if (index === -1) return false;
     categoriesData.splice(index, 1);
     return true;
-  },
+  }
 };

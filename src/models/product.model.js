@@ -10,7 +10,7 @@ export const ProductModel = {
   },
 
   create: (newProduct) => {
-    const id = productsData.length + 1;
+    const id = productsData.length > 0 ? Math.max(...productsData.map(p => p.id)) + 1 : 1;
     const productWithId = { id, ...newProduct };
     productsData.push(productWithId);
     return productWithId;
@@ -30,4 +30,8 @@ export const ProductModel = {
     productsData.splice(index, 1);
     return true;
   },
+
+  existsByCategoryId: (categoryId) => {
+    return productsData.some((product) => product.categoryId === categoryId);
+  }
 };

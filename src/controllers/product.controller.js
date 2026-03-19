@@ -1,6 +1,6 @@
 import { ProductModel } from "../models/product.model.js";
 
-const getAllProducts = (req, res) => {
+export const getAllProducts = (req, res) => {
   const products = ProductModel.findAll();
   res.status(200).json({
     success: true,
@@ -10,11 +10,10 @@ const getAllProducts = (req, res) => {
   });
 };
 
-const getProductById = (req, res) => {
+export const getProductById = (req, res) => {
   try {
     const { id } = req.params;
     const product = ProductModel.findById(Number(id));
-    // Validamos si el producto existe
     if (!product) {
       return res.status(404).json({
         success: false,
@@ -39,19 +38,20 @@ const getProductById = (req, res) => {
   }
 };
 
-const createProduct = (req, res) => {
-  const { name, price } = req.body;
-  // Validación simple
-  if (!name || !price) {
+export const createProduct = (req, res) => {
+  const { name, price, categoryId } = req.body;
+  
+  // Validación que ahora incluye el categoryId
+  if (!name || !price || !categoryId) {
     return res.status(400).json({
       success: false,
-      message: "Nombre y precio son obligatorios",
+      message: "Nombre, precio y categoryId son obligatorios",
       data: [],
       errors: [],
     });
   }
 
-  const newProduct = ProductModel.create({ name, price });
+  const newProduct = ProductModel.create({ name, price, categoryId });
   res.status(201).json({
     success: true,
     message: "Producto creado correctamente",
@@ -60,7 +60,7 @@ const createProduct = (req, res) => {
   });
 };
 
-const updateProduct = (req, res) => {
+export const updateProduct = (req, res) => {
   const { id } = req.params;
   const updatedProduct = ProductModel.update(Number(id), req.body);
   if (!updatedProduct) { 
@@ -79,7 +79,7 @@ const updateProduct = (req, res) => {
   });
 };
 
-const deleteProduct = (req, res) => {
+export const deleteProduct = (req, res) => {
   try {
     const { id } = req.params;
     const isDeleted = ProductModel.delete(Number(id));
@@ -100,11 +100,9 @@ const deleteProduct = (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: `Error al intentar eliminar el producto`,
+      message: "Error en el servidor al eliminar",
       data: [],
-      errors: [],
+      errors: [error.message]
     });
-  } 
-}
-
-export { getAllProducts, getProductById, createProduct, updateProduct, deleteProduct };
+  }
+};

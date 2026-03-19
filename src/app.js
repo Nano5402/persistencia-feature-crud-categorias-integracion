@@ -1,6 +1,6 @@
 import express from "express";
 import productRouter from "./routes/product.routes.js";
-import categoryRouter from "./routes/category.routes.js";
+import categoryRouter from "./routes/category.routes.js"; // <- Esto es lo que faltaba
 
 const app = express();
 
@@ -10,13 +10,13 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/', (req, res) => {
   res.status(200).json({
     success: true,
-    messaje: "Saludo de la API",
+    message: "Saludo de la API",
     data: [],
     errors: [],
   });
-})
+});
 
 app.use("/products", productRouter);
-app.use("/categories", categoryRouter);
+app.use("/categories", categoryRouter); // <- Y esto también faltaba
 
 export default app;

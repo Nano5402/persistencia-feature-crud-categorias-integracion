@@ -1,5 +1,5 @@
 import { CategoryModel } from "../models/category.model.js";
-import { ProductModel } from "../models/product.model.js"; // Lo necesitaremos para la Fase 4
+import { ProductModel } from "../models/product.model.js";
 
 export const getAllCategories = (req, res) => {
   const categories = CategoryModel.findAll();
@@ -74,9 +74,24 @@ export const updateCategory = (req, res) => {
   });
 };
 
+// Reto de Integridad: Prevención de borrado de categorías con productos
 export const deleteCategory = (req, res) => {
   const { id } = req.params;
-  const isDeleted = CategoryModel.delete(Number(id));
+  const categoryId = Number(id);
+
+  // Validación: ¿Hay productos usando esta categoría?
+  const hasProducts = ProductModel.existsByCategoryId(categoryId);
+
+  if (hasProducts) {
+    return res.status(409).json({
+      success: false,
+      message: "No se puede eliminar la categoría porque tiene recursos vinculados",
+      data: [],
+      errors: [],
+    });
+  }
+
+  const isDeleted = CategoryModel.delete(categoryId);
   
   if (!isDeleted) {
     return res.status(404).json({
