@@ -74,12 +74,10 @@ export const updateCategory = (req, res) => {
   });
 };
 
-// Reto de Integridad: Prevención de borrado de categorías con productos
 export const deleteCategory = (req, res) => {
   const { id } = req.params;
   const categoryId = Number(id);
 
-  // Validación: ¿Hay productos usando esta categoría?
   const hasProducts = ProductModel.existsByCategoryId(categoryId);
 
   if (hasProducts) {
@@ -108,4 +106,36 @@ export const deleteCategory = (req, res) => {
     data: [],
     errors: [],
   });
+};
+
+export const getProductsByCategory = (req, res) => {
+  try {
+    const { id } = req.params;
+    const categoryId = Number(id);
+
+    const categoryExists = CategoryModel.findById(categoryId);
+    if (!categoryExists) {
+      return res.status(404).json({
+        success: false,
+        message: `La categoría con ID ${id} no existe`,
+        data: [],
+        errors: [],
+      });
+    }
+
+    const products = ProductModel.findByCategoryId(categoryId);
+    res.status(200).json({
+      success: true,
+      message: `Productos de la categoría: ${categoryExists.name}`,
+      data: products,
+      errors: [],
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error al buscar los productos de la categoría",
+      data: [],
+      errors: [],
+    });
+  }
 };

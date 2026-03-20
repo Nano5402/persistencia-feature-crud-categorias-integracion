@@ -41,7 +41,6 @@ export const getProductById = (req, res) => {
 export const createProduct = (req, res) => {
   const { name, price, categoryId } = req.body;
   
-  // Validación que ahora incluye el categoryId
   if (!name || !price || !categoryId) {
     return res.status(400).json({
       success: false,

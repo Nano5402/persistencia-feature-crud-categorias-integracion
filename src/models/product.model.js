@@ -31,7 +31,13 @@ export const ProductModel = {
     return true;
   },
 
+  // Validación de integridad (Fase 4)
   existsByCategoryId: (categoryId) => {
     return productsData.some((product) => product.categoryId === categoryId);
+  },
+
+  // Obtener productos de una categoría
+  findByCategoryId: (categoryId) => {
+    return productsData.filter((product) => product.categoryId === categoryId);
   }
 };
